@@ -4,28 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, HasApiTokens;
+
+    protected $table = 'users'; // Specify the table name if necessary
 
     protected $fillable = [
         'name',
+        'username',  // Ensure 'username' is in this array
         'email',
         'password',
-        'photo', // Add this for profile picture storage
-        'email_verified_at', // Ensure this is present
-        'verification_token', // Add this for storing the verification token
+        'profil',
+        'direction',
+        'isactive',
+        'image',
+        'phone',
+        'created_by',
     ];
 
     protected $hidden = [
-        'password',
+        'password', // Hide the password attribute
         'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime', // Cast to datetime
-    ];
+    // Define any necessary relationships
+    public function fournisseurs()
+    {
+        return $this->hasMany(Fournisseur::class, 'created_by'); // Adjust this according to your database structure
+    }
 }
